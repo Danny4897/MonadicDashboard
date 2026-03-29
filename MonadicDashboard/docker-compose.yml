@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - '3001:3001'
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+      - PORT=3001
+      - NUGET_CACHE_TTL=${NUGET_CACHE_TTL:-300}
+      - GITHUB_CACHE_TTL=${GITHUB_CACHE_TTL:-60}
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - '5173:80'
+    depends_on:
+      - backend
+    restart: unless-stopped
